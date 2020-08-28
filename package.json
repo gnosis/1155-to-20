@@ -1,0 +1,38 @@
+{
+  "name": "1155-to-20",
+  "version": "1.0.0",
+  "description": "ERC 1155 to ERC 20 converter",
+  "main": "index.js",
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cag/1155-to-20.git"
+  },
+  "keywords": [
+    "ethereum",
+    "smart",
+    "contract",
+    "token",
+    "adapter",
+    "erc-1155",
+    "erc-20",
+    "converter"
+  ],
+  "author": "",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/cag/1155-to-20/issues"
+  },
+  "homepage": "https://github.com/cag/1155-to-20#readme",
+  "devDependencies": {
+    "@gnosis.pm/conditional-tokens-contracts": "^1.0.1",
+    "chai": "^4.2.0",
+    "chai-bn": "^0.2.1",
+    "truffle": "^5.1.42"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.1.0"
+  }
+}
