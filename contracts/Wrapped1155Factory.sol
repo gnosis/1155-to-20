@@ -51,10 +51,9 @@ contract Wrapped1155Factory is ERC1155Receiver {
         override
         returns (bytes4)
     {
-        // address recipient = abi.decode(data, (address));
-        // if (recipient == address(0))
-        //     recipient = operator;
-        address recipient = operator;
+        address recipient = data.length > 0 ? 
+            abi.decode(data, (address)) :
+            operator;
 
         Wrapped1155 wrapped1155 = requireWrapped1155(IERC1155(msg.sender), id);
         wrapped1155.mint(recipient, value);
@@ -73,10 +72,9 @@ contract Wrapped1155Factory is ERC1155Receiver {
         override
         returns (bytes4)
     {
-        // address recipient = abi.decode(data, (address));
-        // if (recipient == address(0))
-        //     recipient = operator;
-        address recipient = operator;
+        address recipient = data.length > 0 ? 
+            abi.decode(data, (address)) :
+            operator;
 
         for (uint i = 0; i < ids.length; i++) {
             requireWrapped1155(IERC1155(msg.sender), ids[i]).mint(recipient, values[i]);
