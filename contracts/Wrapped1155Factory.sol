@@ -126,27 +126,27 @@ contract Wrapped1155Factory is ERC1155Receiver {
             // assign multiToken
             hex"73",
             multiToken,
-            hex"602055",
+            hex"600155",
             
             // assign tokenId
             hex"7f",
             tokenId,
-            hex"604055",
+            hex"600255",
             
             // assign name
             hex"7f",
             "Wrapped ERC-1155", uint128(32),
-            hex"60c055",
+            hex"600655",
             
             // assign symbol
             hex"7f",
             "WMT", uint232(6),
-            hex"60e055",
+            hex"600755",
             
             // assign decimals
             hex"60",
             uint8(18),
-            hex"61010055",
+            hex"600855",
 
             // push 44 (length of runtime)
             hex"60", uint8(44),
@@ -156,7 +156,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
             // dup runtime length
             hex"81",
             // push offset in this calldata to runtime object,
-            hex"60", uint8(172),
+            hex"60", uint8(171),
             // dup free memory pointer
             hex"82"
             
