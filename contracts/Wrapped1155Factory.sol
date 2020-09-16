@@ -184,9 +184,9 @@ contract Wrapped1155Factory is ERC1155Receiver {
     }
 
     event Wrapped1155Creation(
-        IERC1155 multiToken,
-        uint256 tokenId,
-        Wrapped1155 wrappedToken
+        IERC1155 indexed multiToken,
+        uint256 indexed tokenId,
+        Wrapped1155 indexed wrappedToken
     );
 
     function requireWrapped1155(IERC1155 multiToken, uint256 tokenId)
