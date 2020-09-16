@@ -183,6 +183,12 @@ contract Wrapped1155Factory is ERC1155Receiver {
         )))));
     }
 
+    event Wrapped1155Creation(
+        IERC1155 multiToken,
+        uint256 tokenId,
+        Wrapped1155 wrappedToken
+    );
+
     function requireWrapped1155(IERC1155 multiToken, uint256 tokenId)
         public
         returns (Wrapped1155)
@@ -202,6 +208,12 @@ contract Wrapped1155Factory is ERC1155Receiver {
               addr := create2(0, add(deployBytecode, 0x20), mload(deployBytecode), 1155)
             }
             require(wrapped1155Address == addr, "Wrapped1155Factory: failed to deploy");
+
+            emit Wrapped1155Creation(
+                multiToken,
+                tokenId,
+                Wrapped1155(wrapped1155Address)
+            );
         }
 
         return Wrapped1155(wrapped1155Address);
