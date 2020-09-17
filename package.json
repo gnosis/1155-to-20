@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cag/1155-to-20.git"
+    "url": "git+https://github.com/gnosis/1155-to-20.git"
   },
   "keywords": [
     "ethereum",
@@ -23,9 +23,9 @@
   "author": "",
   "license": "LGPL-3.0",
   "bugs": {
-    "url": "https://github.com/cag/1155-to-20/issues"
+    "url": "https://github.com/gnosis/1155-to-20/issues"
   },
-  "homepage": "https://github.com/cag/1155-to-20#readme",
+  "homepage": "https://github.com/gnosis/1155-to-20#readme",
   "devDependencies": {
     "@gnosis.pm/conditional-tokens-contracts": "^1.0.1",
     "chai": "^4.2.0",
