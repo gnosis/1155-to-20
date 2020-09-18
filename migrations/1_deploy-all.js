@@ -34,6 +34,13 @@ module.exports = (d, _network, [deployer]) => d.then(async () => {
     
         Wrapped1155Factory.address = wrapped1155FactoryAddress;
         Wrapped1155Factory.transactionHash = tx;
+
+        const wrapped1155Factory = await Wrapped1155Factory.deployed();
+        const wrapped1155ImplAddress = await wrapped1155Factory.erc20Implementation();
+
+        const Wrapped1155 = artifacts.require('Wrapped1155');
+        Wrapped1155.address = wrapped1155ImplAddress;
+        Wrapped1155.transactionHash = tx;
     } else if (Wrapped1155Factory.address !== wrapped1155FactoryAddress) {
         console.warn(`Expected to find ${
             wrapped1155FactoryAddress
