@@ -1,0 +1,46 @@
+{
+  "Wrapped1155": {
+    "4": {
+      "address": "0x191Ccf8B088120082b127002e59d701b684C338c",
+      "transactionHash": "0x52e6ad302affc5909cf966b9bca774c7d9f54c2540fdae89d40340bec6c84404",
+      "links": {}
+    },
+    "5": {
+      "address": "0x191Ccf8B088120082b127002e59d701b684C338c",
+      "transactionHash": "0xeca09f308ec2710d9c4258ccbefc075642ee78db78bc39205fc3727a1f6186c9",
+      "links": {}
+    },
+    "42": {
+      "address": "0x191Ccf8B088120082b127002e59d701b684C338c",
+      "transactionHash": "0x4ae0f2be814465c1072b73bd79204956b593644fa30f667ff1173bc428bcab74",
+      "links": {}
+    },
+    "100": {
+      "address": "0x191Ccf8B088120082b127002e59d701b684C338c",
+      "transactionHash": "0xd22ef01e6a24475f29e210a9bd9e84ec25d0abaf49af9646a53a049afefd3036",
+      "links": {}
+    }
+  },
+  "Wrapped1155Factory": {
+    "4": {
+      "address": "0xDE6943f3717738038159a406FF157d4eb3238c1B",
+      "transactionHash": "0x52e6ad302affc5909cf966b9bca774c7d9f54c2540fdae89d40340bec6c84404",
+      "links": {}
+    },
+    "5": {
+      "address": "0xDE6943f3717738038159a406FF157d4eb3238c1B",
+      "transactionHash": "0xeca09f308ec2710d9c4258ccbefc075642ee78db78bc39205fc3727a1f6186c9",
+      "links": {}
+    },
+    "42": {
+      "address": "0xDE6943f3717738038159a406FF157d4eb3238c1B",
+      "transactionHash": "0x4ae0f2be814465c1072b73bd79204956b593644fa30f667ff1173bc428bcab74",
+      "links": {}
+    },
+    "100": {
+      "address": "0xDE6943f3717738038159a406FF157d4eb3238c1B",
+      "transactionHash": "0xd22ef01e6a24475f29e210a9bd9e84ec25d0abaf49af9646a53a049afefd3036",
+      "links": {}
+    }
+  }
+}

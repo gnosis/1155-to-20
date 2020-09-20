@@ -28,9 +28,13 @@
   "homepage": "https://github.com/gnosis/1155-to-20#readme",
   "devDependencies": {
     "@gnosis.pm/conditional-tokens-contracts": "^1.0.1",
+    "@truffle/hdwallet-provider": "^1.1.0",
     "chai": "^4.2.0",
     "chai-bn": "^0.2.1",
-    "truffle": "^5.1.42"
+    "dotenv": "^8.2.0",
+    "truffle": "^5.1.42",
+    "truffle-plugin-networks": "^0.1.0",
+    "truffle-plugin-verify": "^0.4.0"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^3.1.0"
