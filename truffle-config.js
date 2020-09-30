@@ -76,9 +76,6 @@ module.exports = {
     solc: {
       version: "0.6.12",
       settings: {
-        optimizer: {
-          enabled: true,
-        },
         metadata: {
           bytecodeHash: "none",
         },
