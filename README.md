@@ -6,6 +6,7 @@ ERC 1155 to ERC 20 converter
 1. Copy `.env.example` to `.env`.
 2. Set SEED_PHRASE, GAS_PRICE, INFURA_PROJECT_ID, and ETHERSCAN_API accordingly in `.env`
 3. `npx truffle migrate --network <network>`
+4. Verify on Etherscan via `npx truffle run verify Wrapped1155Factory Wrapped1155 --license LGPL-3.0-or-later --network <network>`
 
 Make sure the network you are referring to has been described in the `truffle-config.js`.
 
