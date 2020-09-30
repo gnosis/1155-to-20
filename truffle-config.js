@@ -75,11 +75,6 @@ module.exports = {
   compilers: {
     solc: {
       version: "0.6.12",
-      settings: {
-        metadata: {
-          bytecodeHash: "none",
-        },
-      },
     },
   },
   plugins: [
