@@ -4,6 +4,7 @@
   "description": "ERC 1155 to ERC 20 converter",
   "main": "index.js",
   "scripts": {
+    "prepack": "truffle compile --all && truffle run load-networks && truffle networks --clean",
     "test": "truffle test"
   },
   "repository": {
@@ -38,5 +39,13 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^3.1.0"
-  }
+  },
+  "files": [
+    "build/contracts/Wrapped1155.json",
+    "build/contracts/Wrapped1155Factory.json",
+    "contracts",
+    "migrations",
+    "networks.json",
+    "truffle-config.js"
+  ]
 }
