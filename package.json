@@ -1,6 +1,6 @@
 {
   "name": "1155-to-20",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ERC 1155 to ERC 20 converter",
   "main": "index.js",
   "scripts": {
@@ -43,7 +43,7 @@
   "files": [
     "build/contracts/Wrapped1155.json",
     "build/contracts/Wrapped1155Factory.json",
-    "contracts",
+    "src",
     "migrations",
     "networks.json",
     "truffle-config.js"
