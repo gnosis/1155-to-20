@@ -41,6 +41,7 @@
     "@openzeppelin/contracts": "^3.1.0"
   },
   "files": [
+    "build/contracts/ISingletonFactory.json",
     "build/contracts/Wrapped1155.json",
     "build/contracts/Wrapped1155Factory.json",
     "src",
