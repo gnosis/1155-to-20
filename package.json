@@ -1,6 +1,6 @@
 {
   "name": "1155-to-20",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "ERC 1155 to ERC 20 converter",
   "main": "index.js",
   "scripts": {
