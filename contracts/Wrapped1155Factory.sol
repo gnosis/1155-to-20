@@ -20,6 +20,7 @@ contract Wrapped1155Metadata {
 }
 
 contract Wrapped1155 is Wrapped1155Metadata, ERC20 {
+
     constructor() public ERC20("Wrapped ERC-1155 Implementation", "WMT*") {}
 
     function mint(address account, uint256 amount) external onlyFactory {
@@ -135,16 +136,31 @@ contract Wrapped1155Factory is ERC1155Receiver {
             
             // assign name
             hex"7f",
-            "Wrapped ERC-1155", uint128(32),
+            // Chars in hex or UTF-8 = 8 bits => 2 hex numbers => 
+            // string + uint128(30) for 16 chars needs to padding zeros 
+            // and the length of the string
+            // leading zeros = (64 - (tokenName.length * 2)) / 2
+            // Wrapped ERC-1155GnosisProtocol = 31 * 2 zeros + length * 2 in hex
+            // (62 - (31 * 2)) = 0 zeros + length * 2 in hex
+            // "Wrapped ERC-1155", uint128(32), 
+            // Wrapped ERC-1155 = 16 zeros + length * 2 in hex
+            // WrappedERC-1155 = 15 * 2 zeros + length * 2 in hex
+            // (62 - (15 * 2)) = 16
+            "WrappedERC-1155", hex"000000000000000000000000000000001E", 
             hex"600655",
             
             // assign symbol
             hex"7f",
+            // Chars in hex or UTF-8 = 8 bits => 2 hex numbers => 
+            // string + uint128(30) for 16 chars needs to padding zeros 
+            // and the length of the string
             "WMT", uint232(6),
             hex"600755",
             
             // assign decimals
             hex"60",
+            // push one byte
+            // min 1, max 2^8
             uint8(18),
             hex"600855",
 

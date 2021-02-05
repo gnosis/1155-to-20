@@ -118,7 +118,7 @@ contract('Wrapped1155Factory', function (accounts) {
     expect(await token.factory()).to.equal(wrapped1155Factory.address);
     expect(await token.multiToken()).to.equal(conditionalTokens.address);
     expect(await token.tokenId()).to.be.a.bignumber.that.equals(web3.utils.toBN(singleId));
-    expect(await token.name()).to.equal('Wrapped ERC-1155');
+    expect(await token.name()).to.equal('WrappedERC-1155');
     expect(await token.symbol()).to.equal('WMT');
     expect(await token.decimals()).to.be.a.bignumber.that.equals('18');
 
