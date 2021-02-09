@@ -60,6 +60,7 @@ contract('Wrapped1155Factory', function (accounts) {
   let unusedId, singleId, batchIds;
   let tokenName = web3.utils.utf8ToHex("WrappedERC-1155");
   // let tokenName = '0x577261707065644552432d31313535'; // "WrappedERC-1155"
+  let tokenNameOffset = '0x000000000000000000000000000000001E';
   let unusedWrapped1155;
   let singleWrapped1155;
   let batchWrapped1155s;
@@ -70,17 +71,20 @@ contract('Wrapped1155Factory', function (accounts) {
       conditionalTokens.address,
       unusedId,
       tokenName,
+      tokenNameOffset,
     );
     singleWrapped1155 = await wrapped1155Factory.getWrapped1155(
       conditionalTokens.address,
       singleId,
       tokenName,
+      tokenNameOffset,
     );
     batchWrapped1155s = await Promise.all(
       batchIds.map(id => wrapped1155Factory.getWrapped1155(
         conditionalTokens.address,
         id,
         tokenName,
+        tokenNameOffset,
       ))
     );
   });
@@ -142,6 +146,8 @@ contract('Wrapped1155Factory', function (accounts) {
       singleId,
       5,
       account,
+      tokenName,
+      tokenNameOffset,
       emptyBytes,
       { from: account },
     );
@@ -209,6 +215,8 @@ contract('Wrapped1155Factory', function (accounts) {
       batchIds,
       repeat(5),
       account,
+      tokenName,
+      tokenNameOffset,
       emptyBytes,
       { from: account },
     );
