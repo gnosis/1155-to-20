@@ -58,7 +58,8 @@ contract('Wrapped1155Factory', function (accounts) {
   });
   
   let unusedId, singleId, batchIds;
-  let tokenName = '0x577261707065644552432d31313535'; // "WrappedERC-1155"
+  let tokenName = web3.utils.utf8ToHex("WrappedERC-1155");
+  // let tokenName = '0x577261707065644552432d31313535'; // "WrappedERC-1155"
   let unusedWrapped1155;
   let singleWrapped1155;
   let batchWrapped1155s;

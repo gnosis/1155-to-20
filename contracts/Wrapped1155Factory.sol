@@ -52,12 +52,11 @@ contract Wrapped1155Factory is ERC1155Receiver {
         override
         returns (bytes4)
     {
-        bytes memory tokenName = hex"577261707065644552432d31313535"; // "WrappedERC-1155";
         address recipient = data.length > 0 ? 
             abi.decode(data, (address)) :
             operator;
 
-        Wrapped1155 wrapped1155 = requireWrapped1155(IERC1155(msg.sender), id, tokenName);
+        Wrapped1155 wrapped1155 = requireWrapped1155(IERC1155(msg.sender), id);
         wrapped1155.mint(recipient, value);
 
         return this.onERC1155Received.selector;
@@ -74,13 +73,12 @@ contract Wrapped1155Factory is ERC1155Receiver {
         override
         returns (bytes4)
     {
-        bytes memory tokenName = hex"577261707065644552432d31313535"; // "WrappedERC-1155";
         address recipient = data.length > 0 ? 
             abi.decode(data, (address)) :
             operator;
 
         for (uint i = 0; i < ids.length; i++) {
-            requireWrapped1155(IERC1155(msg.sender), ids[i], tokenName).mint(recipient, values[i]);
+            requireWrapped1155(IERC1155(msg.sender), ids[i]).mint(recipient, values[i]);
         }
 
         return this.onERC1155BatchReceived.selector;
@@ -91,11 +89,11 @@ contract Wrapped1155Factory is ERC1155Receiver {
         uint256 tokenId,
         uint256 amount,
         address recipient,
-        bytes memory tokenName,
         bytes calldata data
     )
         external
     {
+        bytes memory tokenName = hex"577261707065644552432d31313535"; // "WrappedERC-1155";
         getWrapped1155(multiToken, tokenId, tokenName).burn(msg.sender, amount);
         multiToken.safeTransferFrom(address(this), recipient, tokenId, amount, data);
     }
@@ -105,12 +103,12 @@ contract Wrapped1155Factory is ERC1155Receiver {
         uint256[] calldata tokenIds,
         uint256[] calldata amounts,
         address recipient,
-        bytes memory tokenName,
         bytes calldata data
     )
         external
     {
         require(tokenIds.length == amounts.length, "Wrapped1155Factory: mismatched input arrays");
+        bytes memory tokenName = hex"577261707065644552432d31313535"; // "WrappedERC-1155";
         for (uint i = 0; i < tokenIds.length; i++) {
             getWrapped1155(multiToken, tokenIds[i], tokenName).burn(msg.sender, amounts[i]);
         }
@@ -121,8 +119,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
         public
         view
         returns (bytes memory)
-    {        
-        bytes memory tokenName2 = hex"577261707065644552432d31313535"; // "WrappedERC-1155";
+    {
         return abi.encodePacked(
             // assign factory
             hex"73",
@@ -152,7 +149,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
             // WrappedERC-1155 = 15 * 2 zeros + length * 2 in hex
             // (62 - (15 * 2)) = 16
             //"WrappedERC-1155", hex"000000000000000000000000000000001E", 
-            "WrappedERC-1155", hex"000000000000000000000000000000001E", 
+            tokenName, hex"000000000000000000000000000000001E", 
             hex"600655",
             
             // assign symbol
@@ -197,6 +194,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
         view
         returns (Wrapped1155)
     {
+        // bytes memory tokenName = hex"577261707065644552432d31313535"; // "WrappedERC-1155";
         return Wrapped1155(address(uint256(keccak256(abi.encodePacked(
             uint8(0xff),
             this,
@@ -211,10 +209,11 @@ contract Wrapped1155Factory is ERC1155Receiver {
         Wrapped1155 indexed wrappedToken
     );
 
-    function requireWrapped1155(IERC1155 multiToken, uint256 tokenId, bytes memory tokenName)
+    function requireWrapped1155(IERC1155 multiToken, uint256 tokenId)
         public
         returns (Wrapped1155)
     {
+        bytes memory tokenName = hex"577261707065644552432d31313535"; // "WrappedERC-1155";
         bytes memory deployBytecode = getWrapped1155DeployBytecode(multiToken, tokenId, tokenName);
 
         address wrapped1155Address = address(uint256(keccak256(abi.encodePacked(
