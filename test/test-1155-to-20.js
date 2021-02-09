@@ -58,6 +58,7 @@ contract('Wrapped1155Factory', function (accounts) {
   });
   
   let unusedId, singleId, batchIds;
+  let tokenName = '0x577261707065644552432d31313535'; // "WrappedERC-1155"
   let unusedWrapped1155;
   let singleWrapped1155;
   let batchWrapped1155s;
@@ -67,15 +68,18 @@ contract('Wrapped1155Factory', function (accounts) {
     unusedWrapped1155 = await wrapped1155Factory.getWrapped1155(
       conditionalTokens.address,
       unusedId,
+      tokenName,
     );
     singleWrapped1155 = await wrapped1155Factory.getWrapped1155(
       conditionalTokens.address,
       singleId,
+      tokenName,
     );
     batchWrapped1155s = await Promise.all(
       batchIds.map(id => wrapped1155Factory.getWrapped1155(
         conditionalTokens.address,
         id,
+        tokenName,
       ))
     );
   });

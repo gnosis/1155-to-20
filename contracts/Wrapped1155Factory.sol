@@ -52,11 +52,12 @@ contract Wrapped1155Factory is ERC1155Receiver {
         override
         returns (bytes4)
     {
+        bytes memory tokenName = hex"577261707065644552432d31313535"; // "WrappedERC-1155";
         address recipient = data.length > 0 ? 
             abi.decode(data, (address)) :
             operator;
 
-        Wrapped1155 wrapped1155 = requireWrapped1155(IERC1155(msg.sender), id);
+        Wrapped1155 wrapped1155 = requireWrapped1155(IERC1155(msg.sender), id, tokenName);
         wrapped1155.mint(recipient, value);
 
         return this.onERC1155Received.selector;
@@ -73,12 +74,13 @@ contract Wrapped1155Factory is ERC1155Receiver {
         override
         returns (bytes4)
     {
+        bytes memory tokenName = hex"577261707065644552432d31313535"; // "WrappedERC-1155";
         address recipient = data.length > 0 ? 
             abi.decode(data, (address)) :
             operator;
 
         for (uint i = 0; i < ids.length; i++) {
-            requireWrapped1155(IERC1155(msg.sender), ids[i]).mint(recipient, values[i]);
+            requireWrapped1155(IERC1155(msg.sender), ids[i], tokenName).mint(recipient, values[i]);
         }
 
         return this.onERC1155BatchReceived.selector;
@@ -89,11 +91,12 @@ contract Wrapped1155Factory is ERC1155Receiver {
         uint256 tokenId,
         uint256 amount,
         address recipient,
+        bytes memory tokenName,
         bytes calldata data
     )
         external
     {
-        getWrapped1155(multiToken, tokenId).burn(msg.sender, amount);
+        getWrapped1155(multiToken, tokenId, tokenName).burn(msg.sender, amount);
         multiToken.safeTransferFrom(address(this), recipient, tokenId, amount, data);
     }
 
@@ -102,22 +105,24 @@ contract Wrapped1155Factory is ERC1155Receiver {
         uint256[] calldata tokenIds,
         uint256[] calldata amounts,
         address recipient,
+        bytes memory tokenName,
         bytes calldata data
     )
         external
     {
         require(tokenIds.length == amounts.length, "Wrapped1155Factory: mismatched input arrays");
         for (uint i = 0; i < tokenIds.length; i++) {
-            getWrapped1155(multiToken, tokenIds[i]).burn(msg.sender, amounts[i]);
+            getWrapped1155(multiToken, tokenIds[i], tokenName).burn(msg.sender, amounts[i]);
         }
         multiToken.safeBatchTransferFrom(address(this), recipient, tokenIds, amounts, data);
     }
 
-    function getWrapped1155DeployBytecode(IERC1155 multiToken, uint256 tokenId)
+    function getWrapped1155DeployBytecode(IERC1155 multiToken, uint256 tokenId, bytes memory tokenName)
         public
         view
         returns (bytes memory)
-    {
+    {        
+        bytes memory tokenName2 = hex"577261707065644552432d31313535"; // "WrappedERC-1155";
         return abi.encodePacked(
             // assign factory
             hex"73",
@@ -146,6 +151,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
             // Wrapped ERC-1155 = 16 zeros + length * 2 in hex
             // WrappedERC-1155 = 15 * 2 zeros + length * 2 in hex
             // (62 - (15 * 2)) = 16
+            //"WrappedERC-1155", hex"000000000000000000000000000000001E", 
             "WrappedERC-1155", hex"000000000000000000000000000000001E", 
             hex"600655",
             
@@ -186,7 +192,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
         );
     }
     
-    function getWrapped1155(IERC1155 multiToken, uint256 tokenId)
+    function getWrapped1155(IERC1155 multiToken, uint256 tokenId, bytes memory tokenName)
         public
         view
         returns (Wrapped1155)
@@ -195,7 +201,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
             uint8(0xff),
             this,
             uint256(1155),
-            keccak256(getWrapped1155DeployBytecode(multiToken, tokenId))
+            keccak256(getWrapped1155DeployBytecode(multiToken, tokenId, tokenName))
         )))));
     }
 
@@ -205,11 +211,11 @@ contract Wrapped1155Factory is ERC1155Receiver {
         Wrapped1155 indexed wrappedToken
     );
 
-    function requireWrapped1155(IERC1155 multiToken, uint256 tokenId)
+    function requireWrapped1155(IERC1155 multiToken, uint256 tokenId, bytes memory tokenName)
         public
         returns (Wrapped1155)
     {
-        bytes memory deployBytecode = getWrapped1155DeployBytecode(multiToken, tokenId);
+        bytes memory deployBytecode = getWrapped1155DeployBytecode(multiToken, tokenId, tokenName);
 
         address wrapped1155Address = address(uint256(keccak256(abi.encodePacked(
             uint8(0xff),
