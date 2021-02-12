@@ -58,9 +58,21 @@ contract('Wrapped1155Factory', function (accounts) {
   });
   
   let unusedId, singleId, batchIds;
-  let tokenName = web3.utils.utf8ToHex("WrappedERC-1155");
-  // let tokenName = '0x577261707065644552432d31313535'; // "WrappedERC-1155"
-  let tokenNameOffset = '0x000000000000000000000000000000001E';
+  // The wrapped ERC-1155 name as hex
+  let tokenNameAsString = "Wrapped ERC-1155";
+  let tokenNameWithoutZeros = "57726170706564204552432d31313535";
+  let tokenName = web3.utils.utf8ToHex(tokenNameAsString); // hex"57726170706564204552432d31313535"
+  // The tokenName offset = 
+  // "WrappedERC1155" = leading zeros (62 - (tokenName.length * 2)) + tokenName.length * 2 in hex
+  //let tokenNameOffset = '0x000000000000000000000000000000001E'; // "WrappedERC-1155"
+  let tokenNameOffset = '0x00000000000000000000000000000020'; // "Wrapped ERC-1155"
+  let tokenNameOffsetWithoutZero = '00000000000000000000000000000020'; // "Wrapped ERC-1155"
+
+  console.log("Testing Wrapped ERC-1155:");
+  console.log(`Token name: ${tokenNameAsString}`);
+  console.log(`Hex token name: ${tokenName}`);
+  console.log(`Token name offset: ${tokenNameOffset}`);
+
   let unusedWrapped1155;
   let singleWrapped1155;
   let batchWrapped1155s;
@@ -90,6 +102,8 @@ contract('Wrapped1155Factory', function (accounts) {
   });
   
   const emptyBytes = '0x';
+  const calldataBytes = '0x'; // `${web3.utils.utf8ToHex(accounts[0])}${tokenNameWithoutZeros}${tokenNameOffsetWithoutZero}`
+  console.log(calldataBytes);
   it('should not have code at unused tokens', async function () {
     const code = await web3.eth.getCode(unusedWrapped1155);
     expect(code).to.equal(emptyBytes);
@@ -116,7 +130,7 @@ contract('Wrapped1155Factory', function (accounts) {
       wrapped1155Factory.address,
       singleId,
       20,
-      emptyBytes,
+      calldataBytes,
       { from: account },
     );
     
@@ -127,7 +141,7 @@ contract('Wrapped1155Factory', function (accounts) {
     expect(await token.factory()).to.equal(wrapped1155Factory.address);
     expect(await token.multiToken()).to.equal(conditionalTokens.address);
     expect(await token.tokenId()).to.be.a.bignumber.that.equals(web3.utils.toBN(singleId));
-    expect(await token.name()).to.equal('WrappedERC-1155');
+    expect(await token.name()).to.equal(tokenNameAsString);
     expect(await token.symbol()).to.equal('WMT');
     expect(await token.decimals()).to.be.a.bignumber.that.equals('18');
 
@@ -148,7 +162,7 @@ contract('Wrapped1155Factory', function (accounts) {
       account,
       tokenName,
       tokenNameOffset,
-      emptyBytes,
+      calldataBytes,
       { from: account },
     );
 
@@ -174,7 +188,7 @@ contract('Wrapped1155Factory', function (accounts) {
       wrapped1155Factory.address,
       batchIds,
       repeat(20),
-      emptyBytes,
+      calldataBytes,
       { from: account },
     );
 
@@ -217,7 +231,7 @@ contract('Wrapped1155Factory', function (accounts) {
       account,
       tokenName,
       tokenNameOffset,
-      emptyBytes,
+      calldataBytes,
       { from: account },
     );
     
