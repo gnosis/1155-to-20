@@ -66,7 +66,7 @@ contract('Wrapped1155Factory', function (accounts) {
   // "WrappedERC1155" = leading zeros (62 - (tokenName.length * 2)) + tokenName.length * 2 in hex
   //let tokenNameOffset = '0x000000000000000000000000000000001E'; // "WrappedERC-1155"
   let tokenNameOffset = '0x00000000000000000000000000000020'; // "Wrapped ERC-1155"
-  let tokenNameOffsetWithoutZero = '00000000000000000000000000000020'; // "Wrapped ERC-1155"
+  let tokenNameOffsetWithoutZeros = '00000000000000000000000000000020'; // "Wrapped ERC-1155"
 
   console.log("Testing Wrapped ERC-1155:");
   console.log(`Token name: ${tokenNameAsString}`);
@@ -102,7 +102,7 @@ contract('Wrapped1155Factory', function (accounts) {
   });
   
   const emptyBytes = '0x';
-  const calldataBytes = '0x'; // `${web3.utils.utf8ToHex(accounts[0])}${tokenNameWithoutZeros}${tokenNameOffsetWithoutZero}`
+  const calldataBytes = `${web3.utils.utf8ToHex(accounts[0])}${tokenNameWithoutZeros}${tokenNameOffsetWithoutZeros}`
   console.log(calldataBytes);
   it('should not have code at unused tokens', async function () {
     const code = await web3.eth.getCode(unusedWrapped1155);

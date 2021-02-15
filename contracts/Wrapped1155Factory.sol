@@ -83,13 +83,13 @@ contract Wrapped1155Factory is ERC1155Receiver {
         address recipient = operator;
         bytes memory tokenName = hex"57726170706564204552432d31313535"; // "Wrapped ERC-1155";
         bytes memory tokenNameOffset = hex"00000000000000000000000000000020";        
-        // if (data.length > 0) {
-        //     (
-        //         recipient,
-        //         tokenName,
-        //         tokenNameOffset
-        //     ) = abi.decode(data, (address, bytes, bytes));
-        // }
+        if (data.length > 0) {
+            (
+                recipient,
+                tokenName,
+                tokenNameOffset
+            ) = abi.decode(data, (address, bytes, bytes));
+        }
 
         for (uint i = 0; i < ids.length; i++) {
             requireWrapped1155(IERC1155(msg.sender), ids[i], tokenName, tokenNameOffset).mint(recipient, values[i]);
