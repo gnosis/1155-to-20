@@ -60,7 +60,6 @@ contract('Wrapped1155Factory', function (accounts) {
   let unusedId, singleId, batchIds;
   // The wrapped ERC-1155 name as hex
   let tokenNameAsString = "WrappedERC-1155";
-  let tokenNameWithoutZeros = "577261707065644552432d31313535";
   let tokenName = web3.utils.utf8ToHex(tokenNameAsString); // hex"57726170706564204552432d31313535"
   // The tokenName offset = 
   // "WrappedERC1155" = leading zeros (62 - (tokenName.length * 2)) + tokenName.length * 2 in hex
@@ -102,7 +101,7 @@ contract('Wrapped1155Factory', function (accounts) {
   });
   
   const emptyBytes = '0x';
-  const calldataBytes = `${web3.utils.utf8ToHex(accounts[0])}${tokenNameWithoutZeros}${tokenNameLengthWithoutZeros}`
+  const calldataBytes = `${tokenName}`; // `${tokenNameLengthWithoutZeros}`
   console.log(calldataBytes);
   it('should not have code at unused tokens', async function () {
     const code = await web3.eth.getCode(unusedWrapped1155);
@@ -135,6 +134,7 @@ contract('Wrapped1155Factory', function (accounts) {
     );
 
     wrapped1155Factory.getPastEvents('Deposit', { fromBlock: 0, toBlock: 'latest' }, (error, eventResult) => {
+      console.log("~###################");
       if (error)
         console.log('Error in Deposit event handler: ' + error);
       else
