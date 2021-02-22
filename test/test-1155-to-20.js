@@ -60,17 +60,33 @@ contract('Wrapped1155Factory', function (accounts) {
   let unusedId, singleId, batchIds;
   // The wrapped ERC-1155 name as hex
   let tokenNameAsString = "WrappedERC-1155";
-  let tokenName = web3.utils.utf8ToHex(tokenNameAsString); // hex"57726170706564204552432d31313535"
-  // The tokenName offset = 
+  let tokenSymbolAsString = "WMT";  
+  let tokenName = web3.utils.utf8ToHex(tokenNameAsString); // hex"577261707065644552432d31313535"
+  let tokenSymbol = web3.utils.utf8ToHex(tokenSymbolAsString); // hex"574d54"
+  let tokenDecimal = 18;
+  // 64 - 2 - (tokenName.length * 2) zeros + hex(tokenName.length * 2)
   // "WrappedERC1155" = leading zeros (62 - (tokenName.length * 2)) + tokenName.length * 2 in hex
   //let tokenNameLength = '0x000000000000000000000000000000001E'; // "WrappedERC-1155"
-  let tokenNameLength = '0x000000000000000000000000000000001E'; // "Wrapped ERC-1155"
-  let tokenNameLengthWithoutZeros = '1E'; // "Wrapped ERC-1155"
+  let tokenNameLength = '0x000000000000000000000000000000001E'; // "WrappedERC-1155".length (30) + 32 + 30 in hex
+  let tokenSymbolLength = '0x0000000000000000000000000000000000000000000000000000000006'; // "Wrapped ERC-1155"
+  let tokenNameLengthWithoutZeros = '000000000000000000000000000000001E';
+  let tokenSymbolLengthWithoutZeros = '0000000000000000000000000000000000000000000000000000000006'; // "Wrapped ERC-1155"
+  const tokenNameEncoded = `${tokenName}${tokenNameLengthWithoutZeros}`;        // 0x577261707065644552432d31313535000000000000000000000000000000001e (32 bytes)
+  const tokenSymbolEncoded = `${tokenSymbol}${tokenSymbolLengthWithoutZeros}`;  // 0x574d540000000000000000000000000000000000000000000000000000000006 (32 bytes)
+  const tokenDecimalAsHex = tokenDecimal.toString(16);
+  const recipientAddress = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
+
+  const emptyBytes = '0x';
+  const calldataBytes = `${tokenNameEncoded}${tokenSymbolEncoded.substring(2)}${tokenDecimalAsHex}${recipientAddress.substring(2)}`;
+  console.log(calldataBytes);
 
   console.log("Testing Wrapped ERC-1155:");
   console.log(`Token name: ${tokenNameAsString}`);
-  console.log(`Hex token name: ${tokenName}`);
-  console.log(`Token name offset: ${tokenNameLength}`);
+  console.log(`Token name encoded: ${tokenNameEncoded}`);
+  console.log(`Token Symbol: ${tokenSymbolAsString}`);
+  console.log(`Token Symbol encoded: ${tokenSymbolEncoded}`);
+  console.log(`Token decimals: ${tokenDecimalAsHex}`);
+  console.log(`CalldataBytes: ${calldataBytes}`);
 
   let unusedWrapped1155;
   let singleWrapped1155;
@@ -81,28 +97,22 @@ contract('Wrapped1155Factory', function (accounts) {
     unusedWrapped1155 = await wrapped1155Factory.getWrapped1155(
       conditionalTokens.address,
       unusedId,
-      tokenName,
-      tokenNameLength,
+      calldataBytes
     );
     singleWrapped1155 = await wrapped1155Factory.getWrapped1155(
       conditionalTokens.address,
       singleId,
-      tokenName,
-      tokenNameLength,
+      calldataBytes
     );
     batchWrapped1155s = await Promise.all(
       batchIds.map(id => wrapped1155Factory.getWrapped1155(
         conditionalTokens.address,
         id,
-        tokenName,
-        tokenNameLength,
+        calldataBytes
       ))
     );
   });
   
-  const emptyBytes = '0x';
-  const calldataBytes = `${tokenName}`; // `${tokenNameLengthWithoutZeros}`
-  console.log(calldataBytes);
   it('should not have code at unused tokens', async function () {
     const code = await web3.eth.getCode(unusedWrapped1155);
     expect(code).to.equal(emptyBytes);
@@ -134,7 +144,6 @@ contract('Wrapped1155Factory', function (accounts) {
     );
 
     wrapped1155Factory.getPastEvents('Deposit', { fromBlock: 0, toBlock: 'latest' }, (error, eventResult) => {
-      console.log("~###################");
       if (error)
         console.log('Error in Deposit event handler: ' + error);
       else
@@ -167,8 +176,6 @@ contract('Wrapped1155Factory', function (accounts) {
       singleId,
       5,
       account,
-      tokenName,
-      tokenNameLength,
       calldataBytes,
       { from: account },
     );
@@ -238,8 +245,6 @@ contract('Wrapped1155Factory', function (accounts) {
       batchIds,
       repeat(5),
       account,
-      tokenName,
-      tokenNameLength,
       calldataBytes,
       { from: account },
     );

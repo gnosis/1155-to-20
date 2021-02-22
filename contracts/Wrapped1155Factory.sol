@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: LGPL-3.0-or-later
+    // SPDX-License-Identifier: LGPL-3.0-or-later
 
 pragma solidity >=0.6.0;
 
@@ -37,7 +37,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
 
     Wrapped1155 public erc20Implementation;
 
-    event Deposit(address recipient, bytes tokenName, bytes tokenNameLength);
+    event Deposit(address recipient, bytes data);
 
     constructor() public {
         erc20Implementation = new Wrapped1155();
@@ -55,33 +55,14 @@ contract Wrapped1155Factory is ERC1155Receiver {
         returns (bytes4)
     {
         address recipient = operator;
-        //bytes memory tokenName = hex"577261707065644552432d31313535"; // "WrappedERC-1155";
-        //bytes memory tokenNameLength = hex"000000000000000000000000000000001E"; // 30
-        //bytes memory tokenName = abi.decode(data[0:16], (bytes31));                             // do not work :(
-        //bytes memory tokenName = abi.decode(data[0:15], (bytes31));                             // do not work :(
-        //bytes memory tokenName = abi.decode(hex"577261707065644552432d3131353500", (bytes31));  // do not work :(
-        //bytes memory tokenName = bytes(data[0:16]);                                             // do not work :(
-        //bytes memory tokenName = abi.decode(data[0:30], (bytes31));                             // do not work :(
-        //bytes memory tokenName = bytes31(data[0:16]);                                           // do not work :(
-        //bytes memory tokenName = bytes31(data[:15]);                                            // do not work :(
-        //bytes memory tokenName = hex"577261707065644552432d3131353500000000000000000000000000000000"; // it do not work :(
-        //bytes memory tokenName = bytes31(hex"577261707065644552432d3131353500");                // it works!
-        //bytes memory tokenName = hex"577261707065644552432d31313535";                           // it works!
-        bytes memory tokenNameLength = hex"000000000000000000000000000000001E"; // 30
-        bytes memory tokenName = bytes(data[:15]);
-        // if (data.length > 0) {
-        // (
-        //     bytes memory tokenName = abi.decode(data, (bytes31));
-        //         // recipient, 
-                
-        //         //tokenNameLength
-        // // address recipient = data.length > 0 ? 
-        // //     abi.decode(data, (address)) :
-        // //     operator;
-        // }
-        emit Deposit(recipient, tokenName, tokenNameLength);
+        // 0x577261707065644552432d31313535000000000000000000000000000000001E574d54000000000000000000000000000000000000000000000000000000000612
+        // 7a250d5630B4cF539739dF2C5dAcb4c659F2488D
+        // address recipient = data.length > 65 ?
+        //     abi.decode(bytes(data[65:85]), (address)) :
+        //     operator;
+        emit Deposit(recipient, data);
 
-        Wrapped1155 wrapped1155 = requireWrapped1155(IERC1155(msg.sender), id, tokenName, tokenNameLength);
+        Wrapped1155 wrapped1155 = requireWrapped1155(IERC1155(msg.sender), id, data);
         wrapped1155.mint(recipient, value);
 
         return this.onERC1155Received.selector;
@@ -99,9 +80,6 @@ contract Wrapped1155Factory is ERC1155Receiver {
         returns (bytes4)
     {
         address recipient = operator;
-        // bytes memory tokenName = hex"577261707065644552432d31313535"; // "WrappedERC-1155";
-        bytes memory tokenName = bytes(data[:15]);
-        bytes memory tokenNameLength = hex"000000000000000000000000000000001E"; // 30
         // if (data.length > 0) {
         //     (
         //         recipient,
@@ -111,7 +89,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
         // }
 
         for (uint i = 0; i < ids.length; i++) {
-            requireWrapped1155(IERC1155(msg.sender), ids[i], tokenName, tokenNameLength).mint(recipient, values[i]);
+            requireWrapped1155(IERC1155(msg.sender), ids[i], data).mint(recipient, values[i]);
         }
 
         return this.onERC1155BatchReceived.selector;
@@ -122,13 +100,11 @@ contract Wrapped1155Factory is ERC1155Receiver {
         uint256 tokenId,
         uint256 amount,
         address recipient,
-        bytes memory tokenName,
-        bytes memory tokenNameLength,
         bytes calldata data
     )
         external
     {
-        getWrapped1155(multiToken, tokenId, tokenName, tokenNameLength).burn(msg.sender, amount);
+        getWrapped1155(multiToken, tokenId, data).burn(msg.sender, amount);
         multiToken.safeTransferFrom(address(this), recipient, tokenId, amount, data);
     }
 
@@ -137,15 +113,13 @@ contract Wrapped1155Factory is ERC1155Receiver {
         uint256[] calldata tokenIds,
         uint256[] calldata amounts,
         address recipient,
-        bytes memory tokenName,
-        bytes memory tokenNameLength,
         bytes calldata data
     )
         external
     {
         require(tokenIds.length == amounts.length, "Wrapped1155Factory: mismatched input arrays");
         for (uint i = 0; i < tokenIds.length; i++) {
-            getWrapped1155(multiToken, tokenIds[i], tokenName, tokenNameLength).burn(msg.sender, amounts[i]);
+            getWrapped1155(multiToken, tokenIds[i], data).burn(msg.sender, amounts[i]);
         }
         multiToken.safeBatchTransferFrom(address(this), recipient, tokenIds, amounts, data);
     }
@@ -153,13 +127,17 @@ contract Wrapped1155Factory is ERC1155Receiver {
     function getWrapped1155DeployBytecode(
         IERC1155 multiToken, 
         uint256 tokenId, 
-        bytes memory tokenName,
-        bytes memory tokenNameLength
+        bytes calldata data
     )
         public
         view
         returns (bytes memory)
-    {        
+    {
+        // calldata tiene que ser múltiplo de 32 bytes
+        // hay que llenar todo de zeros al final de la cadena
+        bytes memory tokenName = bytes(data[:32]);
+        bytes memory tokenSymbol = bytes(data[32:64]); // uint232(6)
+        bytes memory tokenDecimal = bytes(data[64:65]); // uint8(18) = 0x12
         return abi.encodePacked(
             // assign factory
             hex"73",
@@ -189,10 +167,12 @@ contract Wrapped1155Factory is ERC1155Receiver {
             // WrappedERC-1155 = 15 * 2 zeros + length * 2 in hex
             // (62 - (15 * 2)) = 16
             //"WrappedERC-1155", hex"000000000000000000000000000000001E", 
-            //tokenName, tokenNameLength, 
+            //tokenName, 
             //"Wrapped ERC-1155", uint128(32), // hex"0000000000000000000000000000000020",
             //"Wrapped ERC-1155", hex"0000000000000000000000000000000020",
-            tokenName, tokenNameLength,
+            //tokenName,
+            //bytes(tokenName), hex"000000000000000000000000000000001E"
+            tokenName,
             hex"600655",
             
             // assign symbol
@@ -200,14 +180,18 @@ contract Wrapped1155Factory is ERC1155Receiver {
             // Chars in hex or UTF-8 = 8 bits => 2 hex numbers => 
             // string + uint128(30) for 16 chars needs to padding zeros 
             // and the length of the string
-            "WMT", uint232(6),
+            //"WMT", uint232(6),
+            //hex"574d54", hex"0000000000000000000000000000000000000000000000000000000006"            
+            tokenSymbol,
             hex"600755",
             
             // assign decimals
             hex"60",
             // push one byte
             // min 1, max 2^8
-            uint8(18),
+            // uint8(18), 
+            //hex"12",
+            tokenDecimal, 
             hex"600855",
 
             // push 44 (length of runtime)
@@ -235,8 +219,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
     function getWrapped1155(
         IERC1155 multiToken,
         uint256 tokenId,
-        bytes memory tokenName,
-        bytes memory tokenNameLength
+        bytes calldata data
     )
         public
         view
@@ -247,7 +230,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
             uint8(0xff),
             this,
             uint256(1155),
-            keccak256(getWrapped1155DeployBytecode(multiToken, tokenId, tokenName, tokenNameLength))
+            keccak256(getWrapped1155DeployBytecode(multiToken, tokenId, data))
         )))));
     }
 
@@ -260,17 +243,12 @@ contract Wrapped1155Factory is ERC1155Receiver {
     function requireWrapped1155(
         IERC1155 multiToken,
         uint256 tokenId,
-        bytes memory tokenName,
-        bytes memory tokenNameLength
+        bytes calldata data
     )
         public
         returns (Wrapped1155)
     {
-        //bytes memory tokenName = hex"577261707065644552432d31313535"; // "WrappedERC-1155";
-        //bytes memory tokenNameLength = hex"000000000000000000000000000000001E";
-        //bytes memory tokenName = hex"57726170706564204552432d31313535"; // "Wrapped ERC-1155";
-        //bytes memory tokenNameLength = hex"00000000000000000000000000000020";
-        bytes memory deployBytecode = getWrapped1155DeployBytecode(multiToken, tokenId, tokenName, tokenNameLength);
+        bytes memory deployBytecode = getWrapped1155DeployBytecode(multiToken, tokenId, data);
 
         address wrapped1155Address = address(uint256(keccak256(abi.encodePacked(
             uint8(0xff),
