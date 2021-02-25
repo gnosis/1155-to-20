@@ -55,10 +55,8 @@ contract Wrapped1155Factory is ERC1155Receiver {
         returns (bytes4)
     {
         address recipient = operator;
-        // 0x577261707065644552432d31313535000000000000000000000000000000001E574d54000000000000000000000000000000000000000000000000000000000612
-        // 7a250d5630B4cF539739dF2C5dAcb4c659F2488D
-        // address recipient = data.length > 65 ?
-        //     abi.decode(bytes(data[65:85]), (address)) :
+        // address recipient = data.length > 65 ? 
+        //     abi.decode(data[65:], (address)) :
         //     operator;
         emit Deposit(recipient, data);
 
@@ -80,13 +78,9 @@ contract Wrapped1155Factory is ERC1155Receiver {
         returns (bytes4)
     {
         address recipient = operator;
-        // if (data.length > 0) {
-        //     (
-        //         recipient,
-        //         tokenName,
-        //         tokenNameLength
-        //     ) = abi.decode(data, (address, bytes, bytes));
-        // }
+        // address recipient = (data.length > 65) ?
+        //     abi.decode(bytes(data[64:]), (address)) :
+        //     operator;
 
         for (uint i = 0; i < ids.length; i++) {
             requireWrapped1155(IERC1155(msg.sender), ids[i], data).mint(recipient, values[i]);
@@ -133,11 +127,9 @@ contract Wrapped1155Factory is ERC1155Receiver {
         view
         returns (bytes memory)
     {
-        // calldata tiene que ser múltiplo de 32 bytes
-        // hay que llenar todo de zeros al final de la cadena
         bytes memory tokenName = bytes(data[:32]);
-        bytes memory tokenSymbol = bytes(data[32:64]); // uint232(6)
-        bytes memory tokenDecimal = bytes(data[64:65]); // uint8(18) = 0x12
+        bytes memory tokenSymbol = bytes(data[32:64]);
+        bytes memory tokenDecimal = bytes(data[64:65]);
         return abi.encodePacked(
             // assign factory
             hex"73",
