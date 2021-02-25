@@ -31,6 +31,7 @@
     "@gnosis.pm/conditional-tokens-contracts": "^1.0.1",
     "@nomiclabs/buidler": "^1.4.8",
     "@truffle/hdwallet-provider": "^1.1.0",
+    "1155-to-20-helper": "git@github.com:davidalbela/1155-to-20-helper",
     "chai": "^4.2.0",
     "chai-bn": "^0.2.1",
     "dotenv": "^8.2.0",

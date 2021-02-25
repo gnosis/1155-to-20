@@ -1,6 +1,7 @@
 const chai = require('chai');
 const { expect } = chai;
 chai.use(require('chai-bn')(web3.utils.BN));
+const { getTokenBytecode } = require('1155-to-20-helper/src');
 
 const Wrapped1155Factory = artifacts.require('Wrapped1155Factory');
 const Wrapped1155 = artifacts.require('Wrapped1155');
@@ -60,32 +61,17 @@ contract('Wrapped1155Factory', function (accounts) {
   let unusedId, singleId, batchIds;
   // The wrapped ERC-1155 name as hex
   let tokenNameAsString = "WrappedERC-1155";
-  let tokenSymbolAsString = "WMT";  
-  let tokenName = web3.utils.utf8ToHex(tokenNameAsString); // hex"577261707065644552432d31313535"
-  let tokenSymbol = web3.utils.utf8ToHex(tokenSymbolAsString); // hex"574d54"
-  let tokenDecimal = 18;
-  // 64 - 2 - (tokenName.length * 2) zeros + hex(tokenName.length * 2)
-  // "WrappedERC1155" = leading zeros (62 - (tokenName.length * 2)) + tokenName.length * 2 in hex
-  //let tokenNameLength = '0x000000000000000000000000000000001E'; // "WrappedERC-1155"
-  let tokenNameLength = '0x000000000000000000000000000000001E'; // "WrappedERC-1155".length (30) + 32 + 30 in hex
-  let tokenSymbolLength = '0x0000000000000000000000000000000000000000000000000000000006'; // "Wrapped ERC-1155"
-  let tokenNameLengthWithoutZeros = '000000000000000000000000000000001E';
-  let tokenSymbolLengthWithoutZeros = '0000000000000000000000000000000000000000000000000000000006'; // "Wrapped ERC-1155"
-  const tokenNameEncoded = `${tokenName}${tokenNameLengthWithoutZeros}`;        // 0x577261707065644552432d31313535000000000000000000000000000000001e (32 bytes)
-  const tokenSymbolEncoded = `${tokenSymbol}${tokenSymbolLengthWithoutZeros}`;  // 0x574d540000000000000000000000000000000000000000000000000000000006 (32 bytes)
-  const tokenDecimalAsHex = tokenDecimal.toString(16);
-  const recipientAddress = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
+  let tokenSymbolAsString = "dWMT";
+  let tokenDecimals = 18;
 
   const emptyBytes = '0x';
-  const calldataBytes = `${tokenNameEncoded}${tokenSymbolEncoded.substring(2)}${tokenDecimalAsHex}${recipientAddress.substring(2)}`;
+  const calldataBytes = getTokenBytecode(tokenNameAsString, tokenSymbolAsString, tokenDecimals);
   console.log(calldataBytes);
 
   console.log("Testing Wrapped ERC-1155:");
   console.log(`Token name: ${tokenNameAsString}`);
-  console.log(`Token name encoded: ${tokenNameEncoded}`);
   console.log(`Token Symbol: ${tokenSymbolAsString}`);
-  console.log(`Token Symbol encoded: ${tokenSymbolEncoded}`);
-  console.log(`Token decimals: ${tokenDecimalAsHex}`);
+  console.log(`Token decimals: ${tokenDecimals}`);
   console.log(`CalldataBytes: ${calldataBytes}`);
 
   let unusedWrapped1155;
@@ -158,8 +144,8 @@ contract('Wrapped1155Factory', function (accounts) {
     expect(await token.multiToken()).to.equal(conditionalTokens.address);
     expect(await token.tokenId()).to.be.a.bignumber.that.equals(web3.utils.toBN(singleId));
     expect(await token.name()).to.equal(tokenNameAsString);
-    expect(await token.symbol()).to.equal('WMT');
-    expect(await token.decimals()).to.be.a.bignumber.that.equals('18');
+    expect(await token.symbol()).to.equal(tokenSymbolAsString);
+    expect(await token.decimals()).to.be.a.bignumber.that.equals(tokenDecimals.toString());
 
     const accountBalance1155 = () => conditionalTokens.balanceOf(account, singleId);
     const factoryBalance1155 = () => conditionalTokens.balanceOf(wrapped1155Factory.address, singleId);
