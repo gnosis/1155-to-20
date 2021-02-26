@@ -52,7 +52,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
         override
         returns (bytes4)
     {
-        address recipient = operator;onERC1155Received
+        address recipient = operator;
         // address recipient = data.length > 65 ? 
         //     abi.decode(data[65:], (address)) :
         //     operator;
