@@ -37,8 +37,6 @@ contract Wrapped1155Factory is ERC1155Receiver {
 
     Wrapped1155 public erc20Implementation;
 
-    event Deposit(address recipient, bytes data);
-
     constructor() public {
         erc20Implementation = new Wrapped1155();
     }
@@ -58,7 +56,6 @@ contract Wrapped1155Factory is ERC1155Receiver {
         // address recipient = data.length > 65 ? 
         //     abi.decode(data[65:], (address)) :
         //     operator;
-        emit Deposit(recipient, data);
 
         Wrapped1155 wrapped1155 = requireWrapped1155(IERC1155(msg.sender), id, data);
         wrapped1155.mint(recipient, value);
@@ -148,41 +145,16 @@ contract Wrapped1155Factory is ERC1155Receiver {
             
             // assign name
             hex"7f",
-            // Chars in hex or UTF-8 = 8 bits => 2 hex numbers => 
-            // string + uint128(30) for 16 chars needs to padding zeros 
-            // and the length of the string
-            // leading zeros = (62 - (tokenName.length * 2))
-            // Wrapped ERC-1155GnosisProtocol = 31 * 2 zeros + length * 2 in hex
-            // (62 - (31 * 2)) = 0 zeros + length * 2 in hex
-            // "Wrapped ERC-1155", uint128(32), 
-            // Wrapped ERC-1155 = 16 zeros + length * 2 in hex
-            // WrappedERC-1155 = 15 * 2 zeros + length * 2 in hex
-            // (62 - (15 * 2)) = 16
-            //"WrappedERC-1155", hex"000000000000000000000000000000001E", 
-            //tokenName, 
-            //"Wrapped ERC-1155", uint128(32), // hex"0000000000000000000000000000000020",
-            //"Wrapped ERC-1155", hex"0000000000000000000000000000000020",
-            //tokenName,
-            //bytes(tokenName), hex"000000000000000000000000000000001E"
             tokenName,
             hex"600655",
             
             // assign symbol
             hex"7f",
-            // Chars in hex or UTF-8 = 8 bits => 2 hex numbers => 
-            // string + uint128(30) for 16 chars needs to padding zeros 
-            // and the length of the string
-            //"WMT", uint232(6),
-            //hex"574d54", hex"0000000000000000000000000000000000000000000000000000000006"            
             tokenSymbol,
             hex"600755",
             
             // assign decimals
             hex"60",
-            // push one byte
-            // min 1, max 2^8
-            // uint8(18), 
-            //hex"12",
             tokenDecimal, 
             hex"600855",
 
@@ -217,7 +189,6 @@ contract Wrapped1155Factory is ERC1155Receiver {
         view
         returns (Wrapped1155)
     {
-        // bytes memory tokenName = hex"577261707065644552432d31313535"; // "WrappedERC-1155";
         return Wrapped1155(address(uint256(keccak256(abi.encodePacked(
             uint8(0xff),
             this,
