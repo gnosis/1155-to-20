@@ -173,7 +173,8 @@ contract Wrapped1155Factory is ERC1155Receiver {
             // codecopy runtime to memory and return
             hex"39f3",
 
-            // greetz 0age for More-Minimal Proxy runtime bytecode:
+            // greetz 0age for More-Minimal Proxy runtime bytecode
+            // @see https://eips.ethereum.org/EIPS/eip-1167
             hex"3d3d3d3d363d3d37363d73",
             address(erc20Implementation),
             hex"5af43d3d93803e602a57fd5bf3"
