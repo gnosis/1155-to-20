@@ -1,7 +1,7 @@
 const chai = require('chai');
 const { expect } = chai;
 chai.use(require('chai-bn')(web3.utils.BN));
-const { getTokenBytecode } = require('1155-to-20-helper/src');
+const { getTokenBytecode, getBatchTokenBytecode } = require('1155-to-20-helper/src');
 
 const Wrapped1155Factory = artifacts.require('Wrapped1155Factory');
 const Wrapped1155 = artifacts.require('Wrapped1155');
@@ -60,25 +60,39 @@ contract('Wrapped1155Factory', function (accounts) {
   
   let unusedId, singleId, batchIds;
   // The wrapped ERC-1155 name as hex
-  let tokenNameAsString = "WrappedERC-1155";
-  let tokenSymbolAsString = "dWMT";
-  let tokenDecimals = 18;
+  let singleTokenNameAsString = "WrappedERC-1155";
+  let singleTokenSymbolAsString = "dWMT";
+  let singleTokenDecimals = 18;
 
   const emptyBytes = '0x';
-  const calldataBytes = getTokenBytecode(tokenNameAsString, tokenSymbolAsString, tokenDecimals);
-  console.log(calldataBytes);
+  const calldataBytes = getTokenBytecode(singleTokenNameAsString, singleTokenSymbolAsString, singleTokenDecimals);
 
   console.log("Testing Wrapped ERC-1155:");
-  console.log(`Token name: ${tokenNameAsString}`);
-  console.log(`Token Symbol: ${tokenSymbolAsString}`);
-  console.log(`Token decimals: ${tokenDecimals}`);
+  console.log(`Token name: ${singleTokenNameAsString}`);
+  console.log(`Token Symbol: ${singleTokenSymbolAsString}`);
+  console.log(`Token decimals: ${singleTokenDecimals}`);
   console.log(`CalldataBytes: ${calldataBytes}`);
+
+  const batchTokenNameArray = new Array();
+  const batchTokenSymbolArray = new Array();
+  const batchTokenDecimalsArray = new Array();
+  for(let i=0; i<8; i++) {
+    batchTokenNameArray.push(singleTokenNameAsString);
+    batchTokenSymbolArray.push(singleTokenSymbolAsString);
+    batchTokenDecimalsArray.push(singleTokenDecimals);
+  }
+  const batchCalldataBytes = getBatchTokenBytecode(batchTokenNameArray, batchTokenSymbolArray, batchTokenDecimalsArray);
+  console.log(batchCalldataBytes);
 
   let unusedWrapped1155;
   let singleWrapped1155;
   let batchWrapped1155s;
   before('get token addresses', async function () {
     [unusedId, singleId, ...batchIds] = positionIds;
+
+    console.log("UnusedID: " + unusedId);
+    console.log("Single ID: " + singleId);
+    console.log("Batch Id: " + batchIds);
 
     unusedWrapped1155 = await wrapped1155Factory.getWrapped1155(
       conditionalTokens.address,
@@ -94,7 +108,7 @@ contract('Wrapped1155Factory', function (accounts) {
       batchIds.map(id => wrapped1155Factory.getWrapped1155(
         conditionalTokens.address,
         id,
-        calldataBytes
+        batchCalldataBytes
       ))
     );
   });
@@ -129,13 +143,6 @@ contract('Wrapped1155Factory', function (accounts) {
       { from: account },
     );
 
-    wrapped1155Factory.getPastEvents('Deposit', { fromBlock: 0, toBlock: 'latest' }, (error, eventResult) => {
-      if (error)
-        console.log('Error in Deposit event handler: ' + error);
-      else
-        console.log('Deposit: ' + JSON.stringify(eventResult.args));
-    });
-    
     const codeAfter = await web3.eth.getCode(singleWrapped1155);
     expect(codeAfter).to.not.equal(emptyBytes);
     
@@ -143,9 +150,9 @@ contract('Wrapped1155Factory', function (accounts) {
     expect(await token.factory()).to.equal(wrapped1155Factory.address);
     expect(await token.multiToken()).to.equal(conditionalTokens.address);
     expect(await token.tokenId()).to.be.a.bignumber.that.equals(web3.utils.toBN(singleId));
-    expect(await token.name()).to.equal(tokenNameAsString);
-    expect(await token.symbol()).to.equal(tokenSymbolAsString);
-    expect(await token.decimals()).to.be.a.bignumber.that.equals(tokenDecimals.toString());
+    expect(await token.name()).to.equal(singleTokenNameAsString);
+    expect(await token.symbol()).to.equal(singleTokenSymbolAsString);
+    expect(await token.decimals()).to.be.a.bignumber.that.equals(singleTokenDecimals.toString());
 
     const accountBalance1155 = () => conditionalTokens.balanceOf(account, singleId);
     const factoryBalance1155 = () => conditionalTokens.balanceOf(wrapped1155Factory.address, singleId);
@@ -188,7 +195,7 @@ contract('Wrapped1155Factory', function (accounts) {
       wrapped1155Factory.address,
       batchIds,
       repeat(20),
-      calldataBytes,
+      batchCalldataBytes,
       { from: account },
     );
 
@@ -231,7 +238,7 @@ contract('Wrapped1155Factory', function (accounts) {
       batchIds,
       repeat(5),
       account,
-      calldataBytes,
+      batchCalldataBytes,
       { from: account },
     );
     
