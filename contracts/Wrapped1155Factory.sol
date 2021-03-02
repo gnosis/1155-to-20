@@ -78,7 +78,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
         override
         returns (bytes4)
     {
-        require(data.length.div(65) == ids.length, "Wrapped1155Factory: data bytes should be ids size");
+        require(ids.length.mul(65) == data.length, "Wrapped1155Factory: data bytes should be ids size");
         address recipient = operator;
         // address recipient = (data.length > 65) ?
         //     abi.decode(bytes(data[64:]), (address)) :
@@ -117,7 +117,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
         external
     {
         require(tokenIds.length == amounts.length, "Wrapped1155Factory: mismatched input arrays");
-        require(data.length.div(65) == tokenIds.length, "Wrapped1155Factory: data bytes should be ids size");
+        require(tokenIds.length.mul(65) == data.length, "Wrapped1155Factory: data bytes should be ids size");
         for (uint i = 0; i < tokenIds.length; i++) {
             uint first = i.mul(65);
             uint next = first.add(65);
