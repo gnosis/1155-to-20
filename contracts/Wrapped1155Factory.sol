@@ -39,8 +39,6 @@ contract Wrapped1155Factory is ERC1155Receiver {
 
     Wrapped1155 public erc20Implementation;
 
-    event Deposit(address recipient, bytes data);
-
     constructor() public {
         erc20Implementation = new Wrapped1155();
     }
@@ -82,8 +80,7 @@ contract Wrapped1155Factory is ERC1155Receiver {
         address recipient = operator;
         // address recipient = (data.length > 65) ?
         //     abi.decode(bytes(data[64:]), (address)) :
-        //     operator;        
-        emit Deposit(recipient, bytes(data[:65]));
+        //     operator;
 
         for (uint i = 0; i < ids.length; i++) {
             uint first = i.mul(65);
