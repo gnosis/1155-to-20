@@ -29,24 +29,17 @@
   "homepage": "https://github.com/gnosis/1155-to-20#readme",
   "devDependencies": {
     "@gnosis.pm/conditional-tokens-contracts": "^1.0.1",
+    "@nomiclabs/buidler": "^1.4.8",
     "@truffle/hdwallet-provider": "^1.1.0",
+    "1155-to-20-helper": "git@github.com:davidalbela/1155-to-20-helper",
     "chai": "^4.2.0",
     "chai-bn": "^0.2.1",
     "dotenv": "^8.2.0",
-    "truffle": "^5.1.42",
+    "truffle": "^5.1.65",
     "truffle-plugin-networks": "^0.1.0",
     "truffle-plugin-verify": "^0.4.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^3.1.0"
-  },
-  "files": [
-    "build/contracts/ISingletonFactory.json",
-    "build/contracts/Wrapped1155.json",
-    "build/contracts/Wrapped1155Factory.json",
-    "src",
-    "migrations",
-    "networks.json",
-    "truffle-config.js"
-  ]
+    "@openzeppelin/contracts": "^3.4.0"
+  }
 }

@@ -26,16 +26,16 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"initCode\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"}],\"name\":\"deploy\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"deployedContract\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/C/Users/Alan/Documents/GitHub/1155-to-20/contracts/ISingletonFactory.sol\":\"ISingletonFactory\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/Alan/Documents/GitHub/1155-to-20/contracts/ISingletonFactory.sol\":{\"keccak256\":\"0x82dd3a70bea1303f88254c0e2b73d4b5809471895aefb44513d541bf78caa43c\",\"urls\":[\"bzz-raw://0fc0eb58265f865c46d0c82d2ab9061046593f3865e8befb7d66d0cf1a73de1a\",\"dweb:/ipfs/Qmd3ttS5zAG457BEHRPBdyzHkSvUf51BnnMZ2idE9EzKbU\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"initCode\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"}],\"name\":\"deploy\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"deployedContract\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/home/david/Develop/conditionaltokens/1155-to-20/contracts/ISingletonFactory.sol\":\"ISingletonFactory\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/david/Develop/conditionaltokens/1155-to-20/contracts/ISingletonFactory.sol\":{\"keccak256\":\"0x82dd3a70bea1303f88254c0e2b73d4b5809471895aefb44513d541bf78caa43c\",\"urls\":[\"bzz-raw://0fc0eb58265f865c46d0c82d2ab9061046593f3865e8befb7d66d0cf1a73de1a\",\"dweb:/ipfs/Qmd3ttS5zAG457BEHRPBdyzHkSvUf51BnnMZ2idE9EzKbU\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "// EIP 2470\ninterface ISingletonFactory {\n    function deploy(\n        bytes calldata initCode,\n        bytes32 salt\n    ) external returns (address payable deployedContract);\n}\n",
-  "sourcePath": "C:/Users/Alan/Documents/GitHub/1155-to-20/contracts/ISingletonFactory.sol",
+  "sourcePath": "/home/david/Develop/conditionaltokens/1155-to-20/contracts/ISingletonFactory.sol",
   "ast": {
-    "absolutePath": "/C/Users/Alan/Documents/GitHub/1155-to-20/contracts/ISingletonFactory.sol",
+    "absolutePath": "/home/david/Develop/conditionaltokens/1155-to-20/contracts/ISingletonFactory.sol",
     "exportedSymbols": {
       "ISingletonFactory": [
         10
@@ -183,151 +183,166 @@
     "src": "12:166:0"
   },
   "legacyAST": {
-    "absolutePath": "/C/Users/Alan/Documents/GitHub/1155-to-20/contracts/ISingletonFactory.sol",
-    "exportedSymbols": {
-      "ISingletonFactory": [
-        10
-      ]
-    },
-    "id": 11,
-    "license": null,
-    "nodeType": "SourceUnit",
-    "nodes": [
-      {
-        "abstract": false,
-        "baseContracts": [],
-        "contractDependencies": [],
-        "contractKind": "interface",
-        "documentation": null,
-        "fullyImplemented": false,
-        "id": 10,
-        "linearizedBaseContracts": [
+    "attributes": {
+      "absolutePath": "/home/david/Develop/conditionaltokens/1155-to-20/contracts/ISingletonFactory.sol",
+      "exportedSymbols": {
+        "ISingletonFactory": [
           10
-        ],
-        "name": "ISingletonFactory",
-        "nodeType": "ContractDefinition",
-        "nodes": [
+        ]
+      },
+      "license": null
+    },
+    "children": [
+      {
+        "attributes": {
+          "abstract": false,
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "interface",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            10
+          ],
+          "name": "ISingletonFactory",
+          "scope": 11
+        },
+        "children": [
           {
-            "body": null,
-            "documentation": null,
-            "functionSelector": "4af63f02",
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "functionSelector": "4af63f02",
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "deploy",
+              "overrides": null,
+              "scope": 10,
+              "stateMutability": "nonpayable",
+              "virtual": false,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "initCode",
+                      "overrides": null,
+                      "scope": 9,
+                      "stateVariable": false,
+                      "storageLocation": "calldata",
+                      "type": "bytes",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes",
+                          "type": "bytes"
+                        },
+                        "id": 1,
+                        "name": "ElementaryTypeName",
+                        "src": "71:5:0"
+                      }
+                    ],
+                    "id": 2,
+                    "name": "VariableDeclaration",
+                    "src": "71:23:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "salt",
+                      "overrides": null,
+                      "scope": 9,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bytes32",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes32",
+                          "type": "bytes32"
+                        },
+                        "id": 3,
+                        "name": "ElementaryTypeName",
+                        "src": "104:7:0"
+                      }
+                    ],
+                    "id": 4,
+                    "name": "VariableDeclaration",
+                    "src": "104:12:0"
+                  }
+                ],
+                "id": 5,
+                "name": "ParameterList",
+                "src": "61:61:0"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "deployedContract",
+                      "overrides": null,
+                      "scope": 9,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address payable",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "payable",
+                          "type": "address payable"
+                        },
+                        "id": 6,
+                        "name": "ElementaryTypeName",
+                        "src": "141:15:0"
+                      }
+                    ],
+                    "id": 7,
+                    "name": "VariableDeclaration",
+                    "src": "141:32:0"
+                  }
+                ],
+                "id": 8,
+                "name": "ParameterList",
+                "src": "140:34:0"
+              }
+            ],
             "id": 9,
-            "implemented": false,
-            "kind": "function",
-            "modifiers": [],
-            "name": "deploy",
-            "nodeType": "FunctionDefinition",
-            "overrides": null,
-            "parameters": {
-              "id": 5,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 2,
-                  "mutability": "mutable",
-                  "name": "initCode",
-                  "nodeType": "VariableDeclaration",
-                  "overrides": null,
-                  "scope": 9,
-                  "src": "71:23:0",
-                  "stateVariable": false,
-                  "storageLocation": "calldata",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bytes_calldata_ptr",
-                    "typeString": "bytes"
-                  },
-                  "typeName": {
-                    "id": 1,
-                    "name": "bytes",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "71:5:0",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bytes_storage_ptr",
-                      "typeString": "bytes"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 4,
-                  "mutability": "mutable",
-                  "name": "salt",
-                  "nodeType": "VariableDeclaration",
-                  "overrides": null,
-                  "scope": 9,
-                  "src": "104:12:0",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bytes32",
-                    "typeString": "bytes32"
-                  },
-                  "typeName": {
-                    "id": 3,
-                    "name": "bytes32",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "104:7:0",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bytes32",
-                      "typeString": "bytes32"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "61:61:0"
-            },
-            "returnParameters": {
-              "id": 8,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 7,
-                  "mutability": "mutable",
-                  "name": "deployedContract",
-                  "nodeType": "VariableDeclaration",
-                  "overrides": null,
-                  "scope": 9,
-                  "src": "141:32:0",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address_payable",
-                    "typeString": "address payable"
-                  },
-                  "typeName": {
-                    "id": 6,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "141:15:0",
-                    "stateMutability": "payable",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address_payable",
-                      "typeString": "address payable"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "140:34:0"
-            },
-            "scope": 10,
-            "src": "46:129:0",
-            "stateMutability": "nonpayable",
-            "virtual": false,
-            "visibility": "external"
+            "name": "FunctionDefinition",
+            "src": "46:129:0"
           }
         ],
-        "scope": 11,
+        "id": 10,
+        "name": "ContractDefinition",
         "src": "12:165:0"
       }
     ],
+    "id": 11,
+    "name": "SourceUnit",
     "src": "12:166:0"
   },
   "compiler": {
@@ -335,8 +350,9 @@
     "version": "0.6.12+commit.27d51765.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-30T23:56:56.241Z",
+  "schemaVersion": "3.3.3",
+  "updatedAt": "2021-03-24T09:35:52.081Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},

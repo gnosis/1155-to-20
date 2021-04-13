@@ -1,6 +1,7 @@
 const chai = require('chai');
 const { expect } = chai;
 chai.use(require('chai-bn')(web3.utils.BN));
+const { getTokenBytecode, getBatchTokenBytecode } = require('1155-to-20-helper/src');
 
 const Wrapped1155Factory = artifacts.require('Wrapped1155Factory');
 const Wrapped1155 = artifacts.require('Wrapped1155');
@@ -58,29 +59,60 @@ contract('Wrapped1155Factory', function (accounts) {
   });
   
   let unusedId, singleId, batchIds;
+  // The wrapped ERC-1155 name as hex
+  let singleTokenNameAsString = "WrappedERC-1155";
+  let singleTokenSymbolAsString = "dWMT";
+  let singleTokenDecimals = 18;
+
+  const emptyBytes = '0x';
+  const calldataBytes = getTokenBytecode(singleTokenNameAsString, singleTokenSymbolAsString, singleTokenDecimals);
+
+  console.log("Testing Wrapped ERC-1155:");
+  console.log(`Token name: ${singleTokenNameAsString}`);
+  console.log(`Token Symbol: ${singleTokenSymbolAsString}`);
+  console.log(`Token decimals: ${singleTokenDecimals}`);
+  console.log(`CalldataBytes: ${calldataBytes}`);
+
+  const batchTokenNameArray = new Array();
+  const batchTokenSymbolArray = new Array();
+  const batchTokenDecimalsArray = new Array();
+  for(let i=0; i<8; i++) {
+    batchTokenNameArray.push(singleTokenNameAsString);
+    batchTokenSymbolArray.push(singleTokenSymbolAsString);
+    batchTokenDecimalsArray.push(singleTokenDecimals);
+  }
+  const batchCalldataBytes = getBatchTokenBytecode(batchTokenNameArray, batchTokenSymbolArray, batchTokenDecimalsArray);
+  console.log(batchCalldataBytes);
+
   let unusedWrapped1155;
   let singleWrapped1155;
   let batchWrapped1155s;
   before('get token addresses', async function () {
     [unusedId, singleId, ...batchIds] = positionIds;
 
+    console.log("UnusedID: " + unusedId);
+    console.log("Single ID: " + singleId);
+    console.log("Batch Id: " + batchIds);
+
     unusedWrapped1155 = await wrapped1155Factory.getWrapped1155(
       conditionalTokens.address,
       unusedId,
+      calldataBytes
     );
     singleWrapped1155 = await wrapped1155Factory.getWrapped1155(
       conditionalTokens.address,
       singleId,
+      calldataBytes
     );
     batchWrapped1155s = await Promise.all(
       batchIds.map(id => wrapped1155Factory.getWrapped1155(
         conditionalTokens.address,
         id,
+        batchCalldataBytes
       ))
     );
   });
   
-  const emptyBytes = '0x';
   it('should not have code at unused tokens', async function () {
     const code = await web3.eth.getCode(unusedWrapped1155);
     expect(code).to.equal(emptyBytes);
@@ -107,10 +139,10 @@ contract('Wrapped1155Factory', function (accounts) {
       wrapped1155Factory.address,
       singleId,
       20,
-      emptyBytes,
+      calldataBytes,
       { from: account },
     );
-    
+
     const codeAfter = await web3.eth.getCode(singleWrapped1155);
     expect(codeAfter).to.not.equal(emptyBytes);
     
@@ -118,9 +150,9 @@ contract('Wrapped1155Factory', function (accounts) {
     expect(await token.factory()).to.equal(wrapped1155Factory.address);
     expect(await token.multiToken()).to.equal(conditionalTokens.address);
     expect(await token.tokenId()).to.be.a.bignumber.that.equals(web3.utils.toBN(singleId));
-    expect(await token.name()).to.equal('Wrapped ERC-1155');
-    expect(await token.symbol()).to.equal('WMT');
-    expect(await token.decimals()).to.be.a.bignumber.that.equals('18');
+    expect(await token.name()).to.equal(singleTokenNameAsString);
+    expect(await token.symbol()).to.equal(singleTokenSymbolAsString);
+    expect(await token.decimals()).to.be.a.bignumber.that.equals(singleTokenDecimals.toString());
 
     const accountBalance1155 = () => conditionalTokens.balanceOf(account, singleId);
     const factoryBalance1155 = () => conditionalTokens.balanceOf(wrapped1155Factory.address, singleId);
@@ -137,7 +169,7 @@ contract('Wrapped1155Factory', function (accounts) {
       singleId,
       5,
       account,
-      emptyBytes,
+      calldataBytes,
       { from: account },
     );
 
@@ -163,9 +195,11 @@ contract('Wrapped1155Factory', function (accounts) {
       wrapped1155Factory.address,
       batchIds,
       repeat(20),
-      emptyBytes,
+      batchCalldataBytes,
       { from: account },
     );
+
+    
 
     const codeAfter = await Promise.all(batchWrapped1155s.map(
       wrapped1155 => web3.eth.getCode(wrapped1155),
@@ -204,7 +238,7 @@ contract('Wrapped1155Factory', function (accounts) {
       batchIds,
       repeat(5),
       account,
-      emptyBytes,
+      batchCalldataBytes,
       { from: account },
     );
     
