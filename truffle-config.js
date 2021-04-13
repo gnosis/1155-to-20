@@ -10,6 +10,10 @@ const seedPhrase = process.env.SEED_PHRASE ||
     console.log('SEED_PHRASE not set'),
     'myth like bonus scare over problem client lizard pioneer submit female collect'
   );
+const privateKeys = [process.env.PRIVATE_KEY] ||
+  (
+    console.log('privateKey not set')
+  );
 const infuraProjectId = process.env.INFURA_PROJECT_ID ||
   (console.log('INFURA_PROJECT_ID not set'), '');
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY ||
@@ -27,7 +31,7 @@ const networksInfo = [
   { name: 'kovan', id: '42', url: `wss://kovan.infura.io/ws/v3/${infuraProjectId}` },
   { name: 'rinkeby', id: '4', url: `wss://rinkeby.infura.io/ws/v3/${infuraProjectId}` },
   { name: 'goerli', id: '5', url: `wss://goerli.infura.io/ws/v3/${infuraProjectId}` },
-  { name: 'xdai', id: '100', url: 'https://rpc.xdaichain.com/' },
+  { name: 'xdai', id: '100', url: 'wss://rpc.xdaichain.com/wss' },
 ];
 
 let HDWalletProvider;
@@ -40,12 +44,18 @@ try {
 
 const networks = {};
 for (const { name, id, url } of networksInfo) {
-  if (HDWalletProvider) {
-    networks[name] = {
-      provider: () => new HDWalletProvider({
+  let walletProvider = null;
+  if (HDWalletProvider && !privateKeys) {
+    walletProvider = new HDWalletProvider({
         mnemonic: { phrase: seedPhrase },
         providerOrUrl: url,
-      }),
+      })
+  } else if(HDWalletProvider && privateKeys) {
+    walletProvider = new HDWalletProvider(privateKeys, url, 0, 1)
+  }
+    if (seedPhrase) {
+    networks[name] = {
+      provider: () => walletProvider,
       network_id: id,
     };
   } else {
