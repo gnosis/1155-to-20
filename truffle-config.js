@@ -53,7 +53,8 @@ for (const { name, id, url } of networksInfo) {
   } else if(HDWalletProvider && privateKeys) {
     walletProvider = new HDWalletProvider(privateKeys, url, 0, 1)
   }
-    if (seedPhrase) {
+
+  if (seedPhrase || privateKeys) {
     networks[name] = {
       provider: () => walletProvider,
       network_id: id,
